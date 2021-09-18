@@ -20,13 +20,13 @@ const App: React.FC = () => {
     excecute: (value: string) => {
       handleCalc();
     },
-    suma: (value: number) => {
+    add: (value: number) => {
       return calculated + value;
     },
-    resta: (value: number) => {
+    substract: (value: number) => {
       return calculated - value;
     },
-    multiplica: (value: number) => {
+    multiply: (value: number) => {
       return calculated * value;
     },
     divide: (value: number) => {
@@ -34,14 +34,14 @@ const App: React.FC = () => {
     },
   };
 
-  const kbOperators = [
-    { op: "divide", label: "/" },
-    { op: "multiply", label: "x" },
-    { op: "substract", label: "-" },
-    { op: "add", label: "+" },
-    { op: "eql", label: "=" },
-  ];
-
+  const defOperators: any = {
+    divide: { action: "A2", label: "/", operator: "/" },
+    multiply: { action: "A2", label: "x", operator: "*" },
+    substract: { action: "A2", label: "-", operator: "-" },
+    add: { action: "A2", label: "+", operator: "+" },
+    eql: { action: "A3", label: "=", operator: "" },
+  };
+  const kbOperators = ["divide", "multiply", "substract", "add", "eql"];
   const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
 
   const [working, setWorking] = useState<boolean>(false);
@@ -49,20 +49,14 @@ const App: React.FC = () => {
   const [calculated, setCalculated] = useState<number>(0);
 
   const handleOperation = (value: string) => {
-    const operators: any = {
-      divide: "/",
-      multiply: "*",
-      substract: "-",
-      add: "+",
-    };
+    const curOperator = defOperators[value];
+    const newVal = curOperator?.label || value;
 
-    const newVal = operators[value] || value;
+    kbNumbers.includes(operation?.slice(-1));
+
     const showValue = working ? operation + newVal : newVal;
 
-    //const calcValue = calculated + operators[operation?.slice(-1)] + value;
-    //console.log(calcValue);
-
-    setCalculated(excecutThis.suma(parseInt(value, 10)));
+    //setCalculated(excecutThis[value](parseInt(value, 10)));
     setOperation(showValue);
     setWorking(true);
   };
@@ -78,39 +72,24 @@ const App: React.FC = () => {
 
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
-      ESC1A1: "concatena",
-      ESC1A2: "ignore",
-      ESC1A3: "ignore",
-
-      ESC2A1: "concatena",
-      ESC2A2: "concatena",
-      ESC2A3: "excecute",
-
-      ESC3A1: "concatena",
-      ESC3A2: "ignore",
-      ESC3A3: "ignore",
+      A1A1: "concatena",
+      A1A2: "concatena",
+      A2A2: "ignore",
     };
 
-    const Escenario: any = {
-      isNUM: "ESC2",
-      isOP: "ESC3",
-    };
-    const Action: any = {
-      divide: "A2",
-      multiply: "A2",
-      substract: "A2",
-      add: "A2",
-      eql: "A3",
-    };
+    //DEfine ESCENARIO
+    const lastVal = operation?.slice(-1);
+    const curEsceOp = defOperators[lastVal];
+    const curEsc = curEsceOp?.action || "A1";
 
-    const isNUMBER = kbNumbers.includes(operation?.slice(-1));
-    const escVal = isNUMBER ? "isNUM" : "isOP";
+    //DEfine ACTION
+    const curOperator = defOperators[value];
+    const curAction = curOperator?.action || "A1";
 
-    const curEscenario = Escenario[escVal] || "ESC1";
-    const curAction = Action[value] || "A1";
+    console.log(curEsc + curAction);
 
-    const actionExcs =
-      excecutThis[actionExecution[curEscenario + curAction]](value);
+    //Exceute
+    excecutThis[actionExecution[curEsc + curAction]](value);
   };
 
   return (
@@ -134,8 +113,8 @@ const App: React.FC = () => {
             <button onClick={() => handleReset()}>AC</button>
             {kbOperators.map((btn) => {
               return (
-                <button key={btn.op} onClick={() => handleKeyboard(btn.op)}>
-                  {btn.label}
+                <button key={btn} onClick={() => handleKeyboard(btn)}>
+                  {defOperators[btn]["label"]}
                 </button>
               );
             })}
