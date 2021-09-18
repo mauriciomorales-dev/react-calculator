@@ -15,19 +15,25 @@ const App: React.FC = () => {
 
   const [operation, setOperation] = useState<string>("23223243");
 
-  /*
-ESCENARIOS INICIALES:
-ESC1- Display vacío.
-ESC2- Display finalizado en Numero.
-ESC3- Display finalizado en operador matemático (/,*,-,+).
+  const handleOperation = (value: string) => {
+    const operators: any = {
+      divide: "/",
+      multiply: "*",
+      substract: "-",
+      add: "+",
+    };
+    const newVal = operators[value] || value;
+    setOperation(operation + newVal);
+  };
 
-ACCIONES
-A1- Usuario presiona un numero.
-A2- Usuario presiona un operador matemático (/,*,-,+).
-A3- Usuario presiona un "="
-A4- Usuario presiona un "AC"
-*/
   const handleKeyboard = (value: string) => {
+    handleOperation(value);
+
+    const parsed = Number.parseInt(operation?.slice(-1), 10);
+    console.log(parsed);
+    const lastValue = Number.isNaN(parsed);
+    console.log(lastValue);
+
     const actionExecution: any = {
       ESC1A1: "concatena",
       ESC1A2: "Ignore",
@@ -45,7 +51,10 @@ A4- Usuario presiona un "AC"
       ESC3A4: "Reset",
     };
 
-    const Escenario = "ESC1";
+    const Escenario: any = {
+      ac: "A4",
+      divide: "A2",
+    };
     const Action: any = {
       ac: "A4",
       divide: "A2",
