@@ -3,19 +3,24 @@ import "./App.css";
 
 const App: React.FC = () => {
   const kbOperators = ["AC", "/", "*", "-", "+", "="];
-  const kbNumbers = ["7", "8", "9", "4", "5", " 6", "1", "2", "3", "0"];
+  const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
 
   const [operation, setOperation] = useState<string>("");
 
+  const resetCalc = () => {
+    setOperation("");
+  };
+
   const handleKeyboard = (value: string) => {
-    console.log(`Click: ${value}`);
-    setOperation(value);
+    value === "AC" ? resetCalc() : setOperation(`${operation}${value}`);
   };
 
   return (
     <div className="App">
       <div className="calculator">
-        <div className="screen">{operation}</div>
+        <div className="screen">
+          <div className="operation">{operation}</div>
+        </div>
         <div className="keyboard">
           <div className="numbers">
             {kbNumbers.map((btn, index) => {
