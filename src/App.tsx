@@ -39,7 +39,7 @@ const App: React.FC = () => {
     multiply: { action: "OPER", label: "x", operator: "*" },
     substract: { action: "OPER", label: "-", operator: "-" },
     add: { action: "OPER", label: "+", operator: "+" },
-    eql: { action: "A3", label: "=", operator: "" },
+    eql: { action: "EQL", label: "=", operator: "" },
     NUM: { action: "NUM", label: "NUM", operator: "NUM" },
   };
   const kbOperators = ["divide", "multiply", "substract", "add", "eql"];
@@ -71,6 +71,12 @@ const App: React.FC = () => {
     setOperation("");
   };
 
+  const defineValue = (value: string) => {
+    const curValue = defOperators[value.replace(/\d+/g, "NUM")];
+    const result = curValue?.action || "OPER";
+    return result;
+  };
+
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
       NUM: "concatena",
@@ -78,21 +84,14 @@ const App: React.FC = () => {
       OPERNUM: "concatena",
       NUMOPER: "concatena",
       OPEROPER: "ignore",
+      NUMEQL: "excecute",
     };
 
     //DEfine ESCENARIO
+    const typeLastValue = defineValue(operation?.slice(-1));
+    const typeValue = defineValue(value);
 
-    const lastVal = operation?.slice(-1);
-
-    const typeLastValue = lastVal.replace(/\d+/g, "NUM");
-    const typeValue = value.replace(/\d+/g, "NUM");
-
-    const curLastValue = defOperators[typeLastValue];
-    const curValue = defOperators[typeValue];
-    const newcurLastValue = curLastValue?.action || "OPER";
-    const newcurValue = curValue?.action || "OPER";
-
-    const Scenary = `${newcurLastValue}${newcurValue}`;
+    const Scenary = `${typeLastValue}${typeValue}`;
     console.log(Scenary);
 
     //Exceute
