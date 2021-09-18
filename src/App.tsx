@@ -1,7 +1,39 @@
 import { useState } from "react";
 import "./App.css";
 
+/*
+interface excecutThisInt {
+  concatena: () => void;
+  ignore: () => void;
+  reset: () => void;
+  excecute: () => void;
+}
+*/
 const App: React.FC = () => {
+  const excecutThis: any = {
+    concatena: (value: string) => {
+      handleOperation(value);
+    },
+    ignore: (value: string) => {
+      console.log("ignore");
+    },
+    excecute: (value: string) => {
+      handleCalc();
+    },
+    suma: (value: number) => {
+      return calculated + value;
+    },
+    resta: (value: number) => {
+      return calculated - value;
+    },
+    multiplica: (value: number) => {
+      return calculated * value;
+    },
+    divide: (value: number) => {
+      return calculated / value;
+    },
+  };
+
   const kbOperators = [
     { op: "divide", label: "/" },
     { op: "multiply", label: "x" },
@@ -14,6 +46,7 @@ const App: React.FC = () => {
 
   const [working, setWorking] = useState<boolean>(false);
   const [operation, setOperation] = useState<string>("");
+  const [calculated, setCalculated] = useState<number>(0);
 
   const handleOperation = (value: string) => {
     const operators: any = {
@@ -22,16 +55,21 @@ const App: React.FC = () => {
       substract: "-",
       add: "+",
     };
+
     const newVal = operators[value] || value;
     const showValue = working ? operation + newVal : newVal;
 
+    //const calcValue = calculated + operators[operation?.slice(-1)] + value;
+    //console.log(calcValue);
+
+    setCalculated(excecutThis.suma(parseInt(value, 10)));
     setOperation(showValue);
     setWorking(true);
   };
 
   const handleCalc = () => {
     setWorking(!working);
-    setOperation("TOTAL");
+    setOperation(calculated.toString());
   };
   const handleReset = () => {
     setWorking(!working);
@@ -41,19 +79,16 @@ const App: React.FC = () => {
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
       ESC1A1: "concatena",
-      ESC1A2: "Ignore",
-      ESC1A3: "Ignore",
-      ESC1A4: "Reset",
+      ESC1A2: "ignore",
+      ESC1A3: "ignore",
 
       ESC2A1: "concatena",
       ESC2A2: "concatena",
-      ESC2A3: "Excute",
-      ESC2A4: "Reset",
+      ESC2A3: "excecute",
 
       ESC3A1: "concatena",
-      ESC3A2: "Ignore",
-      ESC3A3: "Ignore",
-      ESC3A4: "Reset",
+      ESC3A2: "ignore",
+      ESC3A3: "ignore",
     };
 
     const Escenario: any = {
@@ -61,7 +96,6 @@ const App: React.FC = () => {
       isOP: "ESC3",
     };
     const Action: any = {
-      ac: "A4",
       divide: "A2",
       multiply: "A2",
       substract: "A2",
@@ -75,15 +109,8 @@ const App: React.FC = () => {
     const curEscenario = Escenario[escVal] || "ESC1";
     const curAction = Action[value] || "A1";
 
-    const actionExcs = actionExecution[curEscenario + curAction];
-
-    actionExcs === "concatena"
-      ? handleOperation(value)
-      : actionExcs === "Reset"
-      ? handleReset()
-      : actionExcs === "Excute"
-      ? handleCalc()
-      : console.log(curEscenario + curAction + actionExcs);
+    const actionExcs =
+      excecutThis[actionExecution[curEscenario + curAction]](value);
   };
 
   return (
@@ -91,6 +118,7 @@ const App: React.FC = () => {
       <div className="calculator">
         <div className="screen">
           <div className="operation">{operation}</div>
+          <div className="operation">{calculated}</div>
         </div>
         <div className="keyboard">
           <div className="numbers">
@@ -103,7 +131,7 @@ const App: React.FC = () => {
             })}
           </div>
           <div className="operators">
-            <button onClick={() => setOperation("")}>AC</button>
+            <button onClick={() => handleReset()}>AC</button>
             {kbOperators.map((btn) => {
               return (
                 <button key={btn.op} onClick={() => handleKeyboard(btn.op)}>
