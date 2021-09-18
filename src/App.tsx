@@ -13,21 +13,53 @@ const App: React.FC = () => {
 
   const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
 
-  const [operation, setOperation] = useState<string>("");
+  const [operation, setOperation] = useState<string>("23223243");
 
-  const actionExecution: any = {
-    ac: "AC",
-    divide: "Divide",
-    multiply: "Multiply",
-    substract: "Substract",
-    add: "Add",
-    eql: "Equal",
-  };
+  /*
+ESCENARIOS INICIALES:
+ESC1- Display vacío.
+ESC2- Display finalizado en Numero.
+ESC3- Display finalizado en operador matemático (/,*,-,+).
 
+ACCIONES
+A1- Usuario presiona un numero.
+A2- Usuario presiona un operador matemático (/,*,-,+).
+A3- Usuario presiona un "="
+A4- Usuario presiona un "AC"
+*/
   const handleKeyboard = (value: string) => {
-    const action = actionExecution[value];
+    const actionExecution: any = {
+      ESC1A1: "concatena",
+      ESC1A2: "Ignore",
+      ESC1A3: "Ignore",
+      ESC1A4: "Reset",
+
+      ESC2A1: "concatena",
+      ESC2A2: "concatena",
+      ESC2A3: "Excute Operation",
+      ESC2A4: "Reset",
+
+      ESC3A1: "concatena",
+      ESC3A2: "Ignore",
+      ESC3A3: "Ignore",
+      ESC3A4: "Reset",
+    };
+
+    const Escenario = "ESC1";
+    const Action: any = {
+      ac: "A4",
+      divide: "A2",
+      multiply: "A2",
+      substract: "A2",
+      add: "A2",
+      eql: "A3",
+    };
+
+    const action =
+      actionExecution[Escenario + Action[value]] ||
+      actionExecution[Escenario + "A1"];
+
     console.log(action);
-    //value === "AC" ? resetCalc() : setOperation(`${operation}${value}`);
   };
 
   return (
