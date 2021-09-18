@@ -3,7 +3,6 @@ import "./App.css";
 
 const App: React.FC = () => {
   const kbOperators = [
-    { op: "ac", label: "AC" },
     { op: "divide", label: "/" },
     { op: "multiply", label: "x" },
     { op: "substract", label: "-" },
@@ -13,6 +12,7 @@ const App: React.FC = () => {
 
   const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
 
+  const [working, setWorking] = useState<boolean>(false);
   const [operation, setOperation] = useState<string>("");
 
   const handleOperation = (value: string) => {
@@ -23,7 +23,19 @@ const App: React.FC = () => {
       add: "+",
     };
     const newVal = operators[value] || value;
-    setOperation(operation + newVal);
+    const showValue = working ? operation + newVal : newVal;
+
+    setOperation(showValue);
+    setWorking(true);
+  };
+
+  const handleCalc = () => {
+    setWorking(!working);
+    setOperation("TOTAL");
+  };
+  const handleReset = () => {
+    setWorking(!working);
+    setOperation("");
   };
 
   const handleKeyboard = (value: string) => {
@@ -68,9 +80,9 @@ const App: React.FC = () => {
     actionExcs === "concatena"
       ? handleOperation(value)
       : actionExcs === "Reset"
-      ? setOperation("")
+      ? handleReset()
       : actionExcs === "Excute"
-      ? setOperation("TOTAL")
+      ? handleCalc()
       : console.log(curEscenario + curAction + actionExcs);
   };
 
@@ -91,6 +103,7 @@ const App: React.FC = () => {
             })}
           </div>
           <div className="operators">
+            <button onClick={() => setOperation("")}>AC</button>
             {kbOperators.map((btn) => {
               return (
                 <button key={btn.op} onClick={() => handleKeyboard(btn.op)}>
