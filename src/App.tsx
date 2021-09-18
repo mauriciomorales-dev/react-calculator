@@ -4,16 +4,8 @@ function App() {
   return (
     <div className="App">
       <div className="calculator">
-        <div className="screen">Screen</div>
+        <div className="screen">4376464+488585-5484844+3838</div>
         <div className="keyboard">
-          <div className="operators">
-            <button>AC</button>
-            <button>/</button>
-            <button>x</button>
-            <button>-</button>
-            <button>+</button>
-            <button>=</button>
-          </div>
           <div className="numbers">
             <button>0</button>
             <button>1</button>
@@ -25,6 +17,14 @@ function App() {
             <button>7</button>
             <button>8</button>
             <button>9</button>
+          </div>
+          <div className="operators">
+            <button>AC</button>
+            <button>/</button>
+            <button>x</button>
+            <button>-</button>
+            <button>+</button>
+            <button>=</button>
           </div>
         </div>
       </div>
