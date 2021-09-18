@@ -11,8 +11,19 @@ const App: React.FC = () => {
     setOperation("");
   };
 
+  const actionExecution = {
+    c: "AC",
+    d: "Divie",
+    m: "Multiply",
+    mn: "Minus",
+    p: "Plus",
+    e: "equal",
+  };
+
   const handleKeyboard = (value: string) => {
-    value === "AC" ? resetCalc() : setOperation(`${operation}${value}`);
+    const action = actionExecution["p"];
+    console.log(action);
+    //value === "AC" ? resetCalc() : setOperation(`${operation}${value}`);
   };
 
   return (
