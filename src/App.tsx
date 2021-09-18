@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 
 /*
-interface excecutThisInt {
+interface excecuteThisInt {
   concatena: () => void;
   ignore: () => void;
   reset: () => void;
@@ -10,7 +10,7 @@ interface excecutThisInt {
 }
 */
 const App: React.FC = () => {
-  const excecutThis: any = {
+  const excecuteThis: any = {
     concatena: (value: string) => {
       handleOperation(value);
     },
@@ -35,11 +35,12 @@ const App: React.FC = () => {
   };
 
   const defOperators: any = {
-    divide: { action: "A2", label: "/", operator: "/" },
-    multiply: { action: "A2", label: "x", operator: "*" },
-    substract: { action: "A2", label: "-", operator: "-" },
-    add: { action: "A2", label: "+", operator: "+" },
+    divide: { action: "OPER", label: "/", operator: "/" },
+    multiply: { action: "OPER", label: "x", operator: "*" },
+    substract: { action: "OPER", label: "-", operator: "-" },
+    add: { action: "OPER", label: "+", operator: "+" },
     eql: { action: "A3", label: "=", operator: "" },
+    NUM: { action: "NUM", label: "NUM", operator: "NUM" },
   };
   const kbOperators = ["divide", "multiply", "substract", "add", "eql"];
   const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
@@ -56,7 +57,7 @@ const App: React.FC = () => {
 
     const showValue = working ? operation + newVal : newVal;
 
-    //setCalculated(excecutThis[value](parseInt(value, 10)));
+    //setCalculated(excecuteThis[value](parseInt(value, 10)));
     setOperation(showValue);
     setWorking(true);
   };
@@ -72,24 +73,31 @@ const App: React.FC = () => {
 
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
-      A1A1: "concatena",
-      A1A2: "concatena",
-      A2A2: "ignore",
+      NUM: "concatena",
+      NUMNUM: "concatena",
+      OPERNUM: "concatena",
+      NUMOPER: "concatena",
+      OPEROPER: "ignore",
     };
 
     //DEfine ESCENARIO
+
     const lastVal = operation?.slice(-1);
-    const curEsceOp = defOperators[lastVal];
-    const curEsc = curEsceOp?.action || "A1";
 
-    //DEfine ACTION
-    const curOperator = defOperators[value];
-    const curAction = curOperator?.action || "A1";
+    const typeLastValue = lastVal.replace(/\d+/g, "NUM");
+    const typeValue = value.replace(/\d+/g, "NUM");
 
-    console.log(curEsc + curAction);
+    const curLastValue = defOperators[typeLastValue];
+    const curValue = defOperators[typeValue];
+    const newcurLastValue = curLastValue?.action || "OPER";
+    const newcurValue = curValue?.action || "OPER";
+
+    const Scenary = `${newcurLastValue}${newcurValue}`;
+    console.log(Scenary);
 
     //Exceute
-    excecutThis[actionExecution[curEsc + curAction]](value);
+    const NewAction = actionExecution[Scenary] || "ignore";
+    excecuteThis[NewAction](value);
   };
 
   return (
