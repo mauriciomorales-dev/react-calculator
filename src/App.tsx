@@ -13,7 +13,7 @@ const App: React.FC = () => {
 
   const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
 
-  const [operation, setOperation] = useState<string>("23223243");
+  const [operation, setOperation] = useState<string>("");
 
   const handleOperation = (value: string) => {
     const operators: any = {
@@ -27,13 +27,6 @@ const App: React.FC = () => {
   };
 
   const handleKeyboard = (value: string) => {
-    handleOperation(value);
-
-    const parsed = Number.parseInt(operation?.slice(-1), 10);
-    console.log(parsed);
-    const lastValue = Number.isNaN(parsed);
-    console.log(lastValue);
-
     const actionExecution: any = {
       ESC1A1: "concatena",
       ESC1A2: "Ignore",
@@ -42,7 +35,7 @@ const App: React.FC = () => {
 
       ESC2A1: "concatena",
       ESC2A2: "concatena",
-      ESC2A3: "Excute Operation",
+      ESC2A3: "Excute",
       ESC2A4: "Reset",
 
       ESC3A1: "concatena",
@@ -52,8 +45,8 @@ const App: React.FC = () => {
     };
 
     const Escenario: any = {
-      ac: "A4",
-      divide: "A2",
+      isNUM: "ESC2",
+      isOP: "ESC3",
     };
     const Action: any = {
       ac: "A4",
@@ -64,11 +57,21 @@ const App: React.FC = () => {
       eql: "A3",
     };
 
-    const action =
-      actionExecution[Escenario + Action[value]] ||
-      actionExecution[Escenario + "A1"];
+    const isNUMBER = kbNumbers.includes(operation?.slice(-1));
+    const escVal = isNUMBER ? "isNUM" : "isOP";
 
-    console.log(action);
+    const curEscenario = Escenario[escVal] || "ESC1";
+    const curAction = Action[value] || "A1";
+
+    const actionExcs = actionExecution[curEscenario + curAction];
+
+    actionExcs === "concatena"
+      ? handleOperation(value)
+      : actionExcs === "Reset"
+      ? setOperation("")
+      : actionExcs === "Excute"
+      ? setOperation("TOTAL")
+      : console.log(curEscenario + curAction + actionExcs);
   };
 
   return (
