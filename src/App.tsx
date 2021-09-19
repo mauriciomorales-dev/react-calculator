@@ -4,7 +4,7 @@ import Calculator from "./components/Calculator";
 
 const App: React.FC = () => {
   const OpToDisplay = (rawOp: string) => {
-    return rawOp.replace(/^0+/, "");
+    return rawOp.replace(/^0+(?!$)/, "");
   };
 
   const excecuteThis: any = {
@@ -13,7 +13,7 @@ const App: React.FC = () => {
     },
     reset: () => {
       setStart("");
-      setRawOperation("");
+      setRawOperation("0");
     },
     concat: (value: string) => {
       setStart("");
