@@ -1,14 +1,6 @@
 import { useState } from "react";
 import "./App.css";
 
-/*
-interface excecuteThisInt {
-  concatena: () => void;
-  ignore: () => void;
-  reset: () => void;
-  excecute: () => void;
-}
-*/
 const App: React.FC = () => {
   const excecuteThis: any = {
     concatena: (value: string) => {
@@ -20,70 +12,78 @@ const App: React.FC = () => {
     excecute: (value: string) => {
       handleCalc();
     },
-    add: (value: number) => {
-      return calculated + value;
+    a: (num1: number, num2: number) => {
+      return num1 + num2;
     },
-    substract: (value: number) => {
-      return calculated - value;
+    s: (num1: number, num2: number) => {
+      return num1 - num2;
     },
-    multiply: (value: number) => {
-      return calculated * value;
+    m: (num1: number, num2: number) => {
+      return num1 * num2;
     },
-    divide: (value: number) => {
-      return calculated / value;
+    d: (num1: number, num2: number) => {
+      return num1 / num2;
     },
   };
 
   const defOperators: any = {
-    divide: { action: "OPER", label: "/", operator: "/" },
-    multiply: { action: "OPER", label: "x", operator: "*" },
-    substract: { action: "OPER", label: "-", operator: "-" },
-    add: { action: "OPER", label: "+", operator: "+" },
+    d: { action: "OPER", label: "/", operator: "/" },
+    m: { action: "OPER", label: "x", operator: "*" },
+    s: { action: "OPER", label: "-", operator: "-" },
+    a: { action: "OPER", label: "+", operator: "+" },
     eql: { action: "EQL", label: "=", operator: "" },
     NUM: { action: "NUM", label: "NUM", operator: "NUM" },
+    REINIT: { action: "REINIT", label: "REINIT", operator: "REINIT" },
   };
-  const kbOperators = ["divide", "multiply", "substract", "add", "eql"];
+  const kbOperators = ["d", "m", "s", "a", "eql"];
   const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
 
   const [working, setWorking] = useState<boolean>(false);
   const [operation, setOperation] = useState<string>("");
-  const [calculated, setCalculated] = useState<number>(0);
+  const [display, setDisplay] = useState<string>("");
 
   const handleOperation = (value: string) => {
     const curOperator = defOperators[value];
     const newVal = curOperator?.label || value;
+    const displayValue = working ? display + newVal : newVal;
+    setDisplay(displayValue);
 
-    kbNumbers.includes(operation?.slice(-1));
-
-    const showValue = working ? operation + newVal : newVal;
-
-    //setCalculated(excecuteThis[value](parseInt(value, 10)));
-    setOperation(showValue);
+    const newOpVal = curOperator?.operator || value;
+    const operationValue = working ? operation + newOpVal : value;
+    setOperation(operationValue);
     setWorking(true);
   };
 
   const handleCalc = () => {
     setWorking(!working);
-    setOperation(calculated.toString());
+    function evil(fn: any) {
+      return new Function("return " + fn)();
+    }
+    setOperation("REINIT");
+    setDisplay(evil(operation));
   };
   const handleReset = () => {
     setWorking(!working);
     setOperation("");
+    setDisplay("");
   };
 
   const defineValue = (value: string) => {
+    const Clean = value.replace(/\d+/g, "NUM");
+    console.log(Clean);
     const curValue = defOperators[value.replace(/\d+/g, "NUM")];
-    const result = curValue?.action || "OPER";
+    const result = curValue?.action || "INIT";
     return result;
   };
 
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
-      NUM: "concatena",
-      NUMNUM: "concatena",
+      REINITOPER: "concatena",
+      REINITNUM: "concatena",
+      INITNUM: "concatena",
       OPERNUM: "concatena",
+      NUMNUM: "concatena",
       NUMOPER: "concatena",
-      OPEROPER: "ignore",
       NUMEQL: "excecute",
     };
 
@@ -103,8 +103,7 @@ const App: React.FC = () => {
     <div className="App">
       <div className="calculator">
         <div className="screen">
-          <div className="operation">{operation}</div>
-          <div className="operation">{calculated}</div>
+          <div className="operation">{display}</div>
         </div>
         <div className="keyboard">
           <div className="numbers">
@@ -127,6 +126,7 @@ const App: React.FC = () => {
             })}
           </div>
         </div>
+        <small>{operation}</small>
       </div>
     </div>
   );
