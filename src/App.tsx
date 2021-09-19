@@ -23,8 +23,13 @@ const App: React.FC = () => {
     9: { type: "NUM", label: "9", operator: "9" },
   };
 
-  const cleanValue = (value: string) => {
-    return value.replace(/^0+/, "");
+  const OpToDisplay = (rawOp: string) => {
+    return rawOp
+      .replaceAll("d", "÷")
+      .replaceAll("m", "x")
+      .replaceAll("s", "-")
+      .replaceAll("a", "+")
+      .replace(/^0+/, "");
   };
 
   const excecuteThis: any = {
@@ -34,17 +39,14 @@ const App: React.FC = () => {
     reset: () => {
       setStart("");
       setRawOperation("");
-      setDisplay("0");
     },
     concatena: (value: string) => {
       setStart("");
       setRawOperation(rawOperation + value);
-      setDisplay(cleanValue(display + defOperators[value]["label"]));
     },
     resetConcatena: (value: string) => {
       setStart("");
       setRawOperation(value);
-      setDisplay(cleanValue(value));
     },
     excecute: (value: string) => {
       function evil(fn: any) {
@@ -59,13 +61,11 @@ const App: React.FC = () => {
       ).toString();
       setStart("RESTART");
       setRawOperation(Total);
-      setDisplay(Total);
     },
   };
 
   const [start, setStart] = useState<string>("");
   const [rawOperation, setRawOperation] = useState<string>("0");
-  const [display, setDisplay] = useState<string>("0");
 
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
@@ -91,15 +91,15 @@ const App: React.FC = () => {
     //console.log(Scenary);
 
     //Define function to excecute
-    const NewAction = actionExecution[Scenary] || "ignore";
-    excecuteThis[NewAction](value);
+    const Action = actionExecution[Scenary] || "ignore";
+    excecuteThis[Action](value);
   };
 
   return (
     <div className="App">
       <div className="calculator">
         <div className="screen">
-          <div className="operation">{display}</div>
+          <div className="operation">{OpToDisplay(rawOperation)}</div>
         </div>
         <div className="keyboard">
           <div className="numbers">
