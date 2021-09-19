@@ -31,6 +31,7 @@
   border-radius: 5px 5px 0px 0px;
   padding: 20px;
   font-size: 30px;
+  min-height: 100px;
 }
 .screen .operation {
   text-align: right;
@@ -79,6 +80,7 @@
     rgba(16, 184, 174, 1) 65%
   );
   width: 100%;
+  border-radius: 0px 0px 5px 0px;
 }
 
 .keyboard .numbers {
@@ -87,4 +89,7 @@
 }
 .keyboard .numbers button {
   flex: 1 1 33.33333%;
+}
+.keyboard .numbers button:last-child {
+  border-radius: 0px 0px 0px 5px;
 }
