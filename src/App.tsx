@@ -5,7 +5,7 @@ const App: React.FC = () => {
   const kbOperators = ["d", "m", "s", "a", "eql"];
   const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
   const defOperators: any = {
-    d: { type: "OPER", label: "/", operator: "/" },
+    d: { type: "OPER", label: "÷", operator: "/" },
     m: { type: "OPER", label: "x", operator: "*" },
     s: { type: "MINUS", label: "-", operator: "-" },
     a: { type: "OPER", label: "+", operator: "+" },
@@ -28,18 +28,23 @@ const App: React.FC = () => {
   };
 
   const excecuteThis: any = {
+    ignore: (value: string) => {
+      //console.log("ignore");
+    },
+    reset: () => {
+      setStart("");
+      setRawOperation("");
+      setDisplay("0");
+    },
     concatena: (value: string) => {
       setStart("");
-      setDisplay(cleanValue(display + defOperators[value]["label"]));
       setRawOperation(rawOperation + value);
+      setDisplay(cleanValue(display + defOperators[value]["label"]));
     },
     resetConcatena: (value: string) => {
       setStart("");
-      setDisplay(cleanValue(value));
       setRawOperation(value);
-    },
-    ignore: (value: string) => {
-      //console.log("ignore");
+      setDisplay(cleanValue(value));
     },
     excecute: (value: string) => {
       function evil(fn: any) {
@@ -59,14 +64,8 @@ const App: React.FC = () => {
   };
 
   const [start, setStart] = useState<string>("");
-  const [rawOperation, setRawOperation] = useState<string>("");
+  const [rawOperation, setRawOperation] = useState<string>("0");
   const [display, setDisplay] = useState<string>("0");
-
-  const handleReset = () => {
-    setStart("");
-    setRawOperation("");
-    setDisplay("0");
-  };
 
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
@@ -83,19 +82,15 @@ const App: React.FC = () => {
       RESTARTNUMMINUS: "concatena",
     };
 
-    //DEfine ESCENARIO
-    const defineValue = (value: string) => {
-      const curValue = defOperators[value.replace(/\d+/g, "NUM")];
-      const result = curValue?.type || "DEF";
-
-      return result;
+    //Define ESCENARIO
+    const dv = (value: string) => {
+      const curValue = defOperators[value];
+      return curValue?.type || "DEF";
     };
-    const typeLastValue = defineValue(rawOperation?.slice(-1));
-    const typeValue = defineValue(value);
-    const Scenary = `${start}${typeLastValue}${typeValue}`;
-    console.log(Scenary);
+    const Scenary = `${start}${dv(rawOperation.slice(-1))}${dv(value)}`;
+    //console.log(Scenary);
 
-    //Excecute
+    //Define function to excecute
     const NewAction = actionExecution[Scenary] || "ignore";
     excecuteThis[NewAction](value);
   };
@@ -117,7 +112,7 @@ const App: React.FC = () => {
             })}
           </div>
           <div className="operators">
-            <button onClick={() => handleReset()}>AC</button>
+            <button onClick={() => excecuteThis["reset"]()}>AC</button>
             {kbOperators.map((btn) => {
               return (
                 <button key={btn} onClick={() => handleKeyboard(btn)}>
@@ -133,37 +128,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-/*
-ESCENARIOS INICIALES:
-ESC1- Display vacío.
-ESC2- Display finalizado en Numero.
-ESC3- Display finalizado en operador matemático (/,*,-,+).
-
-ACCIONES
-A1- Usuario presiona un numero.
-A2- Usuario presiona un operador matemático (/,*,-,+).
-A3- Usuario presiona un "="
-A4- Usuario presiona un "AC"
-
-
-Given ESC1
-When A1
-Then se concatena el VALOR con el valor en el DISPLAY.
-
-Given ESC1
-When A2
-Then se IGNORA.
-
-Given ESC1
-When A1
-Then se concatena el VALOR con el valor en el DISPLAY.
-
-Given ESC1
-When A1
-Then se concatena el VALOR con el valor en el DISPLAY.
-
-Given ESC1
-When A1
-Then se concatena el VALOR con el valor en el DISPLAY.
-*/
