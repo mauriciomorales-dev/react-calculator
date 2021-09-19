@@ -6,23 +6,15 @@ const App: React.FC = () => {
     concatena: (value: string) => {
       handleOperation(value);
     },
+    resetConcatena: (value: string) => {
+      handleOperationReset(value);
+    },
+
     ignore: (value: string) => {
       console.log("ignore");
     },
     excecute: (value: string) => {
       handleCalc();
-    },
-    a: (num1: number, num2: number) => {
-      return num1 + num2;
-    },
-    s: (num1: number, num2: number) => {
-      return num1 - num2;
-    },
-    m: (num1: number, num2: number) => {
-      return num1 * num2;
-    },
-    d: (num1: number, num2: number) => {
-      return num1 / num2;
     },
   };
 
@@ -38,50 +30,58 @@ const App: React.FC = () => {
   const kbOperators = ["d", "m", "s", "a", "eql"];
   const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
 
-  const [working, setWorking] = useState<boolean>(false);
+  const [start, setStart] = useState<string>("");
+  const [rawOperation, setRawOperation] = useState<string>("");
   const [operation, setOperation] = useState<string>("");
   const [display, setDisplay] = useState<string>("");
 
+  const handleOperationReset = (value: string) => {
+    setStart("");
+    setOperation(value);
+    setDisplay(value);
+  };
   const handleOperation = (value: string) => {
+    setStart("");
     const curOperator = defOperators[value];
+
     const newVal = curOperator?.label || value;
-    const displayValue = working ? display + newVal : newVal;
-    setDisplay(displayValue);
+    setDisplay(display + newVal);
 
     const newOpVal = curOperator?.operator || value;
-    const operationValue = working ? operation + newOpVal : value;
-    setOperation(operationValue);
-    setWorking(true);
+    setOperation(operation + newOpVal);
+
+    setRawOperation(rawOperation + value);
   };
 
   const handleCalc = () => {
-    setWorking(!working);
     function evil(fn: any) {
       return new Function("return " + fn)();
     }
-    setOperation("REINIT");
-    setDisplay(evil(operation));
+    let Total = evil(operation);
+    setStart("RESTART");
+    setOperation(Total.toString());
+    setDisplay(Total.toString());
   };
   const handleReset = () => {
-    setWorking(!working);
+    setStart("");
     setOperation("");
     setDisplay("");
   };
 
   const defineValue = (value: string) => {
-    const Clean = value.replace(/\d+/g, "NUM");
-    console.log(Clean);
     const curValue = defOperators[value.replace(/\d+/g, "NUM")];
-    const result = curValue?.action || "INIT";
+    const result = curValue?.action || "DEF";
     return result;
   };
 
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
-      REINITOPER: "concatena",
-      REINITNUM: "concatena",
-      INITNUM: "concatena",
-      OPERNUM: "concatena",
+      DEFNUM: "concatena",
+      OPER: "concatena",
+      STARTNUM: "concatena",
+      RESTARTNUMNUM: "resetConcatena",
+      RESTARTNUMOPER: "concatena",
+      RESTARTDEFNUM: "concatena",
       NUMNUM: "concatena",
       NUMOPER: "concatena",
       NUMEQL: "excecute",
@@ -91,7 +91,7 @@ const App: React.FC = () => {
     const typeLastValue = defineValue(operation?.slice(-1));
     const typeValue = defineValue(value);
 
-    const Scenary = `${typeLastValue}${typeValue}`;
+    const Scenary = `${start}${typeLastValue}${typeValue}`;
     console.log(Scenary);
 
     //Exceute
@@ -126,7 +126,9 @@ const App: React.FC = () => {
             })}
           </div>
         </div>
-        <small>{operation}</small>
+        <small>Operation: {operation}</small>
+        <br />
+        <small>Raw operation: {rawOperation}</small>
       </div>
     </div>
   );
