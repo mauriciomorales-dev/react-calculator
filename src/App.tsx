@@ -9,7 +9,6 @@ const App: React.FC = () => {
     resetConcatena: (value: string) => {
       handleOperationReset(value);
     },
-
     ignore: (value: string) => {
       console.log("ignore");
     },
@@ -21,7 +20,7 @@ const App: React.FC = () => {
   const defOperators: any = {
     d: { action: "OPER", label: "/", operator: "/" },
     m: { action: "OPER", label: "x", operator: "*" },
-    s: { action: "OPER", label: "-", operator: "-" },
+    s: { action: "MINUS", label: "-", operator: "-" },
     a: { action: "OPER", label: "+", operator: "+" },
     eql: { action: "EQL", label: "=", operator: "" },
     NUM: { action: "NUM", label: "NUM", operator: "NUM" },
@@ -39,6 +38,7 @@ const App: React.FC = () => {
     setStart("");
     setOperation(value);
     setDisplay(value);
+    setRawOperation(value);
   };
   const handleOperation = (value: string) => {
     setStart("");
@@ -59,6 +59,7 @@ const App: React.FC = () => {
     }
     let Total = evil(operation);
     setStart("RESTART");
+    setRawOperation(Total.toString());
     setOperation(Total.toString());
     setDisplay(Total.toString());
   };
@@ -66,6 +67,7 @@ const App: React.FC = () => {
     setStart("");
     setOperation("");
     setDisplay("");
+    setRawOperation("");
   };
 
   const defineValue = (value: string) => {
@@ -77,18 +79,20 @@ const App: React.FC = () => {
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
       DEFNUM: "concatena",
-      OPER: "concatena",
-      STARTNUM: "concatena",
-      RESTARTNUMNUM: "resetConcatena",
-      RESTARTNUMOPER: "concatena",
-      RESTARTDEFNUM: "concatena",
       NUMNUM: "concatena",
       NUMOPER: "concatena",
+      OPERNUM: "concatena",
       NUMEQL: "excecute",
+      RESTARTNUMOPER: "concatena",
+      RESTARTNUMNUM: "resetConcatena",
+      DEFMINUS: "concatena",
+      MINUSNUM: "concatena",
+      NUMMINUS: "concatena",
+      RESTARTNUMMINUS: "concatena",
     };
 
     //DEfine ESCENARIO
-    const typeLastValue = defineValue(operation?.slice(-1));
+    const typeLastValue = defineValue(rawOperation?.slice(-1));
     const typeValue = defineValue(value);
 
     const Scenary = `${start}${typeLastValue}${typeValue}`;
