@@ -3,8 +3,6 @@ import "./App.css";
 import Calculator from "./components/Calculator";
 
 const App: React.FC = () => {
-  const kbOperators = ["÷", "x", "-", "+", "="];
-  const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
   const OpToDisplay = (rawOp: string) => {
     return rawOp.replace(/^0+/, "");
   };
