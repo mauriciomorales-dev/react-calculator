@@ -5,26 +5,37 @@ const App: React.FC = () => {
   const kbOperators = ["d", "m", "s", "a", "eql"];
   const kbNumbers = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0"];
   const defOperators: any = {
-    d: { action: "OPER", label: "/", operator: "/" },
-    m: { action: "OPER", label: "x", operator: "*" },
-    s: { action: "MINUS", label: "-", operator: "-" },
-    a: { action: "OPER", label: "+", operator: "+" },
-    eql: { action: "EQL", label: "=", operator: "" },
-    NUM: { action: "NUM", label: "NUM", operator: "NUM" },
+    d: { type: "OPER", label: "/", operator: "/" },
+    m: { type: "OPER", label: "x", operator: "*" },
+    s: { type: "MINUS", label: "-", operator: "-" },
+    a: { type: "OPER", label: "+", operator: "+" },
+    eql: { type: "EQL", label: "=", operator: "" },
+    NUM: { type: "NUM", label: "NUM", operator: "NUM" },
+    0: { type: "NUM", label: "0", operator: "0" },
+    1: { type: "NUM", label: "1", operator: "1" },
+    2: { type: "NUM", label: "2", operator: "2" },
+    3: { type: "NUM", label: "3", operator: "3" },
+    4: { type: "NUM", label: "4", operator: "4" },
+    5: { type: "NUM", label: "5", operator: "5" },
+    6: { type: "NUM", label: "6", operator: "6" },
+    7: { type: "NUM", label: "7", operator: "7" },
+    8: { type: "NUM", label: "8", operator: "8" },
+    9: { type: "NUM", label: "9", operator: "9" },
+  };
+
+  const cleanValue = (value: string) => {
+    return value.replace(/^0+/, "");
   };
 
   const excecuteThis: any = {
     concatena: (value: string) => {
       setStart("");
-      const curOperator = defOperators[value];
-      const newVal = curOperator?.label || value;
-      setDisplay(display + newVal);
-      const newOpVal = curOperator?.operator || value;
+      setDisplay(cleanValue(display + defOperators[value]["label"]));
       setRawOperation(rawOperation + value);
     },
     resetConcatena: (value: string) => {
       setStart("");
-      setDisplay(value);
+      setDisplay(cleanValue(value));
       setRawOperation(value);
     },
     ignore: (value: string) => {
@@ -57,12 +68,6 @@ const App: React.FC = () => {
     setDisplay("0");
   };
 
-  const defineValue = (value: string) => {
-    const curValue = defOperators[value.replace(/\d+/g, "NUM")];
-    const result = curValue?.action || "DEF";
-    return result;
-  };
-
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
       DEFNUM: "concatena",
@@ -79,9 +84,14 @@ const App: React.FC = () => {
     };
 
     //DEfine ESCENARIO
+    const defineValue = (value: string) => {
+      const curValue = defOperators[value.replace(/\d+/g, "NUM")];
+      const result = curValue?.type || "DEF";
+
+      return result;
+    };
     const typeLastValue = defineValue(rawOperation?.slice(-1));
     const typeValue = defineValue(value);
-
     const Scenary = `${start}${typeLastValue}${typeValue}`;
     console.log(Scenary);
 
