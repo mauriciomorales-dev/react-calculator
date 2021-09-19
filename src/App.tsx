@@ -4,7 +4,10 @@ import Calculator from "./components/Calculator";
 
 const App: React.FC = () => {
   const OpToDisplay = (rawOp: string) => {
-    return rawOp.replace(/^0+(?!$)/, "");
+    return rawOp
+      .replace(/^0+(?!$)/, "")
+      .toString()
+      .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   };
 
   const excecuteThis: any = {
