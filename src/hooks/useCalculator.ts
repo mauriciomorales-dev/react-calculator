@@ -15,7 +15,7 @@ const useCalculator: any = () => {
     },
     concat: (value: string) => {
       setStart("");
-      setRawOperation(rawOperation + value);
+      setRawOperation(displayOperation(rawOperation + value));
     },
     resetConcat: (value: string) => {
       setStart("");
