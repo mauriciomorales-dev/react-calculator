@@ -34,6 +34,10 @@ const useCalculator: any = () => {
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
       DEFNUM: "concat",
+      DEFDEC: "concat",
+      NUMDEC: "concat",
+      DECNUM: "concat",
+      OPEDEC: "concat",
       NUMNUM: "concat",
       NUMOPE: "concat",
       OPENUM: "concat",
@@ -53,12 +57,13 @@ const useCalculator: any = () => {
     //Define ESCENARIO
     const dv = (value: string) => {
       const newValue = value
-        .replaceAll(/[0-9]/g, "NUM")
-        .replaceAll("÷", "OPE")
-        .replaceAll("+", "OPE")
-        .replaceAll("x", "OPE")
-        .replaceAll("-", "MIN")
-        .replaceAll("=", "EQL");
+        .replace(/[0-9]/g, "NUM")
+        .replace(/\./g, "DEC")
+        .replace(/÷/g, "OPE")
+        .replace(/\+/g, "OPE")
+        .replace(/x/g, "OPE")
+        .replace(/-/g, "MIN")
+        .replace(/=/g, "EQL");
       return newValue || "DEF";
     };
 
