@@ -11,8 +11,10 @@ export const calculateOperation: any = (operation: string) => {
   const opArr = operation.match(/[+\-*\/]*(\.\d+|\d+(\.\d+)?)/g) || []; // eslint-disable-line
 
   for (let i = 0; i < opArr.length; i++) {
-    let op = opArr[i].replaceAll(/[0-9]/g, "") || "+";
-    let num = parseFloat(opArr[i].replaceAll(/\D/g, ""));
+    let op = opArr[i].replaceAll(/[0-9\.]/g, "") || "+";
+    let num = parseFloat(opArr[i].replaceAll(op, ""));
+    console.log(`${opArr[i]}: ${total} ${op} ${num}`);
+
     total = mathThis[op](total, num);
   }
   return total;

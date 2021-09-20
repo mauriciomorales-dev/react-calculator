@@ -68,6 +68,7 @@ const useCalculator: any = () => {
     const Action = actionExecution[Scenary] || "ignore";
     excecuteThis[Action](value);
   };
+  console.log(calculateOperation("1+2.5"));
 
   return [rawOperation, handleKeyboard];
 };
