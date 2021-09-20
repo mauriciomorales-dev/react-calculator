@@ -7,12 +7,16 @@ export const calculateOperation: any = (operation: string) => {
   };
   var total = 0;
 
-  operation = operation.replaceAll("÷", "/").replaceAll("x", "*");
+  operation = operation
+    .replaceAll("÷", "/")
+    .replaceAll("x", "*")
+    .replaceAll(",", "");
   const opArr = operation.match(/[+\-*\/]*(\.\d+|\d+(\.\d+)?)/g) || []; // eslint-disable-line
 
   for (let i = 0; i < opArr.length; i++) {
-    let op = opArr[i].replaceAll(/[0-9\.]/g, "") || "+"; // eslint-disable-line
+    let op = opArr[i].replaceAll(/[0-9,.]/g, "") || "+";
     let num = parseFloat(opArr[i].replaceAll(op, ""));
+    //console.log(`${opArr[i]}: ${total}${op}${num}`);
 
     total = mathThis[op](total, num);
   }
