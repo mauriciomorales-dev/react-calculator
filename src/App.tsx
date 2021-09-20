@@ -1,15 +1,12 @@
 import { useState } from "react";
 import "./App.css";
 import Calculator from "./components/Calculator";
+import {
+  calculateOperation,
+  displayOperation,
+} from "./helpers/calculateOperation";
 
 const App: React.FC = () => {
-  const OpToDisplay = (rawOp: string) => {
-    return rawOp
-      .replace(/^0+(?!$)/, "")
-      .toString()
-      .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-  };
-
   const excecuteThis: any = {
     ignore: (value: string) => {
       //console.log("ignore");
@@ -27,15 +24,9 @@ const App: React.FC = () => {
       setRawOperation(value);
     },
     excecute: (value: string) => {
-      function evil(fn: any) {
-        return new Function("return " + fn)();
-      }
       setStart("RESTART");
-      setRawOperation(
-        evil(
-          OpToDisplay(rawOperation).replaceAll("÷", "/").replaceAll("x", "*")
-        ).toString()
-      );
+      let Total: any = calculateOperation(rawOperation);
+      setRawOperation(displayOperation(Total.toString()));
     },
   };
 
@@ -64,12 +55,12 @@ const App: React.FC = () => {
     //Define ESCENARIO
     const dv = (value: string) => {
       const newValue = value
-        .replace(/[0-9]/g, "NUM")
-        .replace("÷", "OPE")
-        .replace("+", "OPE")
-        .replace("x", "OPE")
-        .replace("-", "MIN")
-        .replace("=", "EQL");
+        .replaceAll(/[0-9]/g, "NUM")
+        .replaceAll("÷", "OPE")
+        .replaceAll("+", "OPE")
+        .replaceAll("x", "OPE")
+        .replaceAll("-", "MIN")
+        .replaceAll("=", "EQL");
       return newValue || "DEF";
     };
 
@@ -79,11 +70,10 @@ const App: React.FC = () => {
     const Action = actionExecution[Scenary] || "ignore";
     excecuteThis[Action](value);
   };
-
   return (
     <div className="App">
       <Calculator
-        displayValue={OpToDisplay(rawOperation)}
+        displayValue={displayOperation(rawOperation)}
         handleFunc={handleKeyboard}
       />
     </div>
