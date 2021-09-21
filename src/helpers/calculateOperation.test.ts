@@ -1,6 +1,6 @@
 import {
   calculateOperation,
-  displayOperation,
+  cleanOperation,
 } from "../helpers/calculateOperation";
 
 //Calculations tests
@@ -31,16 +31,14 @@ test("Operation starting with decimal separator .", () => {
 
 //Display Calculation tests
 test("Display number with thousands separator.", () => {
-  let operation = displayOperation(
-    "9383838372727267367374788859594990021301230"
-  );
+  let operation = cleanOperation("9383838372727267367374788859594990021301230");
   expect(operation).toBe(
     "9,383,838,372,727,267,367,374,788,859,594,990,021,301,230"
   );
 });
 
 test("Display number with thousands separator + decimal", () => {
-  let operation = displayOperation(
+  let operation = cleanOperation(
     "9383838372727267367374788859594990021301230.9897"
   );
   expect(operation).toBe(

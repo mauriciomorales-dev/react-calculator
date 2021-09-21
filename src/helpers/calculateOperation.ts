@@ -1,28 +1,42 @@
-export const calculateOperation: any = (operation: string) => {
+export const calculateOperation: any = (operation: string = "0") => {
   const mathThis: any = {
     "+": (n1: number, n2: number) => n1 + n2,
     "-": (n1: number, n2: number) => n1 - n2,
     "*": (n1: number, n2: number) => n1 * n2,
     "/": (n1: number, n2: number) => n1 / n2,
   };
-  var total = 0;
 
-  operation = operation.replace(/÷/g, "/").replace(/x/g, "*").replace(/,/g, "");
+  operation = cleanOperation(operation)
+    .replace(/÷/g, "/")
+    .replace(/x/g, "*")
+    .replace(/,/g, "");
+
+  let total = 0;
   const opArr = operation.match(/[+\-*\/]*(\.\d+|\d+(\.\d+)?)/g) || []; // eslint-disable-line
-
   for (let i = 0; i < opArr.length; i++) {
     let op = opArr[i].replace(/[0-9,.]/g, "") || "+";
     let num = parseFloat(opArr[i].replace(op, ""));
-    //console.log(`${opArr[i]}: ${total}${op}${num}`);
-
     total = mathThis[op](total, num);
   }
-  return total;
+  return total || "0";
 };
 
-export const displayOperation: any = (operation: string) => {
-  return operation
-    .replace(/^0+(?!$)/, "")
-    .toString()
-    .replace(/\B(?<!\.\d)(?=(\d{3})+(?!\d))/g, ",");
+export const cleanOperation: any = (operation: string = "0") => {
+  operation = operation
+    .replace(/[^0-9x÷+\-*\/\.]/g, "") // eslint-disable-line
+    .replace(/^[^1-9\.\-*\.]/, "") // eslint-disable-line
+    .replace(/^[x÷+*]/, "0") // eslint-disable-line
+    .replace(/^[\.]/, "0."); // eslint-disable-line
+
+  //Replace consecutive operators
+  const opArr = operation.match(/[\/*x÷+-]{2,}/g) || []; // eslint-disable-line
+  for (let i = 0; i < opArr.length; i++) {
+    operation = operation.replace(opArr[i], opArr[i].charAt(0));
+  }
+  //Replace repeated decimals separators
+  const decArr = operation.match(/[.]([.0-9]*)$/g) || []; // eslint-disable-line
+  let decMatched: any = decArr.slice(-1).toString() || "";
+  let decMatchedCorrected: any = decMatched.replace(/(?<=\..*)\./g, ""); // eslint-disable-line
+  operation = operation.replace(decMatched, decMatchedCorrected);
+  return operation || "0";
 };

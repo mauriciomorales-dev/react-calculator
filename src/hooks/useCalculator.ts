@@ -1,30 +1,27 @@
 import { useState } from "react";
 import {
   calculateOperation,
-  displayOperation,
+  cleanOperation,
 } from "../helpers/calculateOperation";
 
 const useCalculator: any = () => {
   const excecuteThis: any = {
-    ignore: (value: string) => {
-      //console.log("ignore");
-    },
     reset: () => {
       setStart("");
       setRawOperation("0");
     },
     concat: (value: string) => {
       setStart("");
-      setRawOperation(displayOperation(rawOperation + value));
+      setRawOperation(cleanOperation(rawOperation + value));
     },
     resetConcat: (value: string) => {
       setStart("");
       setRawOperation(value);
     },
     excecute: (value: string) => {
-      setStart("RESTART");
+      setStart("r");
       let Total: any = calculateOperation(rawOperation);
-      setRawOperation(displayOperation(Total.toString()));
+      setRawOperation(cleanOperation(Total.toString()));
     },
   };
 
@@ -33,45 +30,19 @@ const useCalculator: any = () => {
 
   const handleKeyboard = (value: string) => {
     const actionExecution: any = {
-      DEFNUM: "concat",
-      DEFDEC: "concat",
-      NUMDEC: "concat",
-      DECNUM: "concat",
-      OPEDEC: "concat",
-      NUMNUM: "concat",
-      NUMOPE: "concat",
-      OPENUM: "concat",
-      NUMEQL: "excecute",
-      RESTARTNUMOPE: "concat",
-      RESTARTNUMNUM: "resetConcat",
-      DEFMIN: "concat",
-      MINNUM: "concat",
-      NUMMIN: "concat",
-      RESTARTNUMMIN: "concat",
-      RESTARTNUMAC: "reset",
-      NUMAC: "reset",
-      MINAC: "reset",
-      OPEAC: "reset",
+      concat: "concat",
+      rconcat: "resetConcat",
+      "r=": "excecute",
+      "=": "excecute",
+      ac: "reset",
+      rac: "reset",
     };
-
-    //Define ESCENARIO
-    const dv = (value: string) => {
-      const newValue = value
-        .replace(/[0-9]/g, "NUM")
-        .replace(/\./g, "DEC")
-        .replace(/÷/g, "OPE")
-        .replace(/\+/g, "OPE")
-        .replace(/x/g, "OPE")
-        .replace(/-/g, "MIN")
-        .replace(/=/g, "EQL");
-      return newValue || "DEF";
-    };
-
-    const Scenary = `${start}${dv(rawOperation.slice(-1))}${dv(value)}`;
-    console.log(Scenary);
-    //Define function to excecute
-    const Action = actionExecution[Scenary] || "ignore";
-    excecuteThis[Action](value);
+    let keyActionoperation = value
+      .replace(/[0-9]/g, start + "concat")
+      .toLowerCase();
+    let Action = actionExecution[keyActionoperation] || "concat";
+    let ActionExce = excecuteThis[Action] || "ignore";
+    ActionExce(value);
   };
 
   return [rawOperation, handleKeyboard];
