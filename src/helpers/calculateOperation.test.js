@@ -1,7 +1,4 @@
-import {
-  calculateOperation,
-  cleanOperation,
-} from "../helpers/calculateOperation";
+import { calculateOperation, cleanOperation } from "./calculateOperation";
 
 //Calculations tests
 test("Common math operation", () => {
@@ -29,7 +26,6 @@ test("Operation starting with decimal separator .", () => {
   expect(operation).toBe(5.7);
 });
 
-//Display Calculation tests
 test("Display number with thousands separator.", () => {
   let operation = cleanOperation("9383838372727267367374788859594990021301230");
   expect(operation).toBe(
@@ -45,3 +41,19 @@ test("Display number with thousands separator + decimal", () => {
     "9,383,838,372,727,267,367,374,788,859,594,990,021,301,230.9897"
   );
 });
+
+const testArr = [
+  [".23434433", "0.23434433"],
+  ["+23434433", "23,434,433"],
+  ["-23434433", "-23,434,433"],
+  ["*23434433", "23,434,433"],
+  ["x23434433", "23,434,433"],
+  ["/23434433", "23,434,433"],
+  ["÷23434433", "23,434,433"],
+];
+
+for (let i = 0; i < testArr.length; i++) {
+  test("Test characters at the begining: " + testArr[i][0], () => {
+    expect(cleanOperation(testArr[i][0])).toBe(testArr[i][1]);
+  });
+}
