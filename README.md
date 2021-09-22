@@ -1,14 +1,16 @@
 # React TypeScript Calculator
 
-React Calculator using Typescript.
-
-#### ![](React-typescript-calculator.png)
+##[Demo]
+[Demo]: <https://w-react-calculator.vercel.app/>
 
 ## Built With
 
-React 17.0.2
-React Hooks
-Typescript
+- React 17.0.2
+- Typescript.
+- No Switch, IF, ELSE.
+- Regex
+
+#### ![](React-typescript-calculator.png)
 
 ## How To Use:
 
