@@ -1,9 +1,8 @@
 # React TypeScript Calculator
 
-##[Demo]
-[Demo]: <https://w-react-calculator.vercel.app/>
+### [ Clic to see the demo]
 
-## Built With
+## Characteristics:
 
 - React 17.0.2
 - Typescript.
@@ -137,3 +136,6 @@ Background:
 
 
 ```
+
+[//]: # "These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax"
+[ clic to see the demo]: https://w-react-calculator.vercel.app/
